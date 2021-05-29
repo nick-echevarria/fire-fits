@@ -1,0 +1,1 @@
+{"ast":null,"code":"import ProductsPage from './products';","map":{"version":3,"sources":["/Users/slicknick/Development/Advanced-React/sick-fits/frontend/pages/index.js"],"names":["ProductsPage"],"mappings":"AAAA,OAAOA,YAAP,MAAyB,YAAzB","sourcesContent":["import ProductsPage from './products'"]},"metadata":{},"sourceType":"module"}
