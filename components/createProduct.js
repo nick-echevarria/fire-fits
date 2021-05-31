@@ -1,7 +1,30 @@
 import useForm from '../lib/useForm';
 import Form from './styles/Form';
 
-
+const CREATE_PRODUCT_MUTATION = gql`
+  mutation CREATE_PRODUCT_MUTATION(
+    # which variables are passed in and what are their types?
+    $name: String!
+    $description: String!
+    $price: Int!
+    $image: Upload
+  ) {
+    createProduct(
+      data: {
+        name: $name
+        description: $description
+        price: $price
+        status: "AVAILABLE"
+        photo: { create: { image: $image, altText: $name } }
+      }
+    ) {
+      id
+      price
+      description
+      name
+    }
+  }
+`;
 export default function createProduct() {
   const { inputs, handleChange, clearForm, resetForm } = useForm({
     image: '',
@@ -10,14 +33,27 @@ export default function createProduct() {
     description: 'These are the best!',
   });
 
+  const [createProduct, { loading, error, data }] = useMutation(
+    CREATE_PRODUCT_MUTATION,
+    {
+      // any additional data that comes along
+      variables: inputs,
+    }
+  );
+
   return (
     <Form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
+        // submit the input fields to the backend
+        // you can pass variables here if you don't know them at time of definition
+        await createProduct();
+        clearForm();
       }}
     >
-      {/* use existing aria attribute for loading state */}
-      <fieldset>
+      <DisplayError error={error} />
+      {/* use existing aria attribute for loading state intead of making separate variables */}
+      <fieldset disabled={loading} aria-busy={loading}>
         <label htmlFor="image">
           Image
           <input
